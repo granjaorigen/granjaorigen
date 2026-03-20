@@ -603,7 +603,10 @@ footer a:hover{color:rgba(255,255,255,.82)}
   .dash-tables{grid-template-columns:1fr}
 }
 @media(max-width:768px){
-  .nav{padding:0 24px}
+  .nav{padding:0 20px}
+  .nav-logo{font-size:.85rem}
+  .lang-toggle{display:flex!important}
+  .nav-cta{display:none}
   .wrap{padding:0 24px}
   .hero-content{padding:0 24px 56px}
   .section{padding:72px 0}
@@ -613,18 +616,19 @@ footer a:hover{color:rgba(255,255,255,.82)}
   .pillars-grid{grid-template-columns:1fr}
   .form-grid{grid-template-columns:1fr}
   .fg.full{grid-column:1}
-  .form-card{padding:28px}
+  .form-card{padding:24px}
   .kpi-grid{grid-template-columns:1fr 1fr}
   .inst-logos{gap:32px}
   .footer-grid{grid-template-columns:1fr;gap:32px}
   .footer-bottom{flex-direction:column;align-items:flex-start}
-  .nav-cta{display:none}
 }
 @media(max-width:480px){
   .hero h1{font-size:2.4rem}
   .kpi-grid{grid-template-columns:1fr}
   .hero-actions{flex-direction:column}
-  .btn-primary,.btn-secondary,.btn-ghost{justify-content:center;width:100%}
+  .btn-primary,.btn-secondary,.btn-ghost{justify-content:center;width:100%;min-width:unset}
+  .nav-logo br{display:none}
+  .lt-btn{padding:5px 9px;font-size:8px}
 }
 </style>
 </head>
@@ -1066,7 +1070,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
 <div style="background:var(--s800)" id="solicitar-visita">
   <div class="section">
     <div class="wrap">
-      <div style="display:grid;grid-template-columns:5fr 7fr;gap:80px;align-items:start" class="reg-layout">
+      <div class="reg-layout">
 
         <!-- Intro -->
         <div class="sr">
