@@ -106,7 +106,8 @@ button{font-family:inherit;cursor:pointer}
 .hero-shade{
   position:absolute;inset:0;
   background:
-    linear-gradient(to top,rgba(18,9,3,.95) 0%,rgba(18,9,3,.5) 30%,rgba(18,9,3,.1) 65%,rgba(18,9,3,.25) 100%);
+    linear-gradient(to bottom,rgba(18,9,3,.72) 0%,rgba(18,9,3,.2) 18%,transparent 35%),
+    linear-gradient(to top,rgba(18,9,3,.98) 0%,rgba(18,9,3,.82) 25%,rgba(18,9,3,.35) 55%,rgba(18,9,3,.15) 75%,transparent 100%);
 }
 .hero-content{
   position:relative;z-index:2;
@@ -136,22 +137,34 @@ button{font-family:inherit;cursor:pointer}
   color:rgba(255,255,255,.65);max-width:520px;margin-top:20px;
 }
 .hero-actions{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
-.btn-primary{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:13px 28px;background:var(--g400);color:var(--s900);
+/* Hero buttons — unified system */
+.btn-primary,
+.btn-secondary,
+.btn-ghost {
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:13px 28px;
+  min-width:220px;
   font-family:var(--fm);font-size:.68rem;letter-spacing:.12em;
-  text-transform:uppercase;border:none;border-radius:2px;
+  text-transform:uppercase;border-radius:2px;
+  border:1px solid transparent;
   transition:all .25s var(--ease);
+  white-space:nowrap;
 }
-.btn-primary:hover{background:var(--g300);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.3)}
+/* Primary — filled gold, strongest action */
+.btn-primary{
+  background:var(--g400);color:var(--s900);border-color:var(--g400);
+}
+.btn-primary:hover{background:var(--g300);border-color:var(--g300);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.3)}
+/* Secondary — outlined gold, second action */
+.btn-secondary{
+  background:transparent;color:var(--g300);border-color:rgba(212,171,98,.5);
+}
+.btn-secondary:hover{background:rgba(212,171,98,.12);border-color:var(--g400);color:var(--g400)}
+/* Ghost — outlined white, tertiary action */
 .btn-ghost{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:13px 28px;background:transparent;color:rgba(255,255,255,.8);
-  font-family:var(--fm);font-size:.68rem;letter-spacing:.12em;
-  text-transform:uppercase;border:1px solid rgba(255,255,255,.28);
-  border-radius:2px;transition:all .25s;
+  background:transparent;color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.2);
 }
-.btn-ghost:hover{border-color:rgba(255,255,255,.65);color:#fff}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);color:rgba(255,255,255,.88)}
 
 .hero-scroll{
   position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
@@ -611,7 +624,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
   .hero h1{font-size:2.4rem}
   .kpi-grid{grid-template-columns:1fr}
   .hero-actions{flex-direction:column}
-  .btn-primary,.btn-ghost{justify-content:center}
+  .btn-primary,.btn-secondary,.btn-ghost{justify-content:center;width:100%}
 }
 </style>
 </head>
@@ -627,6 +640,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
     <li><a href="#ejes" data-es="Cómo funciona" data-en="How it works">Cómo funciona</a></li>
     <li><a href="#registro" data-es="Registrar visita" data-en="Register visit">Registrar visita</a></li>
     <li><a href="#estadisticas" data-es="Estadísticas" data-en="Statistics">Estadísticas</a></li>
+    <li><a href="#solicitar-visita" data-es="Solicitar visita" data-en="Request visit" style="color:var(--g400)!important">Solicitar visita</a></li>
   </ul>
   <div class="nav-right">
     <div class="lang-toggle">
@@ -651,9 +665,14 @@ footer a:hover{color:rgba(255,255,255,.82)}
       <p class="hero-sub" data-es="Un modelo demostrativo regenerativo donde el suelo vivo, el agua y los animales trabajan en ciclos que se fortalecen mutuamente — y cuyo conocimiento es bien público." data-en="A regenerative demonstration model where living soil, water and animals work in mutually reinforcing cycles — and whose knowledge is a public good.">Un modelo demostrativo regenerativo donde el suelo vivo, el agua y los animales trabajan en ciclos que se fortalecen mutuamente — y cuyo conocimiento es bien público.</p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="scrollToForm()">
-          ✦ <span data-es="Registrar mi visita" data-en="Register my visit">Registrar mi visita</span>
+          <span data-es="Registrar mi visita" data-en="Register my visit">Registrar mi visita</span>
         </button>
-        <button class="btn-ghost" onclick="document.getElementById('proyecto').scrollIntoView({behavior:'smooth'})" data-es="Conocer el proyecto" data-en="About the project">Conocer el proyecto</button>
+        <button class="btn-secondary" onclick="document.getElementById('solicitar-visita').scrollIntoView({behavior:'smooth'})">
+          <span data-es="Solicitar visita guiada" data-en="Request a guided visit">Solicitar visita guiada</span>
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('proyecto').scrollIntoView({behavior:'smooth'})">
+          <span data-es="Conocer el proyecto" data-en="About the project">Conocer el proyecto</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1043,6 +1062,116 @@ footer a:hover{color:rgba(255,255,255,.82)}
   </div>
 </div>
 
+<!-- ═══════════ SOLICITAR VISITA ═══════════ -->
+<div style="background:var(--s800)" id="solicitar-visita">
+  <div class="section">
+    <div class="wrap">
+      <div style="display:grid;grid-template-columns:5fr 7fr;gap:80px;align-items:start" class="reg-layout">
+
+        <!-- Intro -->
+        <div class="sr">
+          <div class="eyebrow light" data-es="Visitas al sitio demostrativo" data-en="Visits to the demonstration site">Visitas al sitio demostrativo</div>
+          <h2 class="display light" data-es="Solicita una <em>visita guiada</em>" data-en="Request a <em>guided visit</em>">Solicita una <em>visita guiada</em></h2>
+          <p style="font-size:.93rem;line-height:1.85;color:rgba(255,255,255,.5);font-weight:300;margin-top:18px" data-es="Las Granjas Agroecológicas del Mañana están abiertas a agricultores, técnicos, investigadores, estudiantes e instituciones. Las visitas son guiadas y gratuitas, sujetas a disponibilidad." data-en="Granjas Agroecológicas del Mañana is open to farmers, technicians, researchers, students and institutions. Visits are guided and free, subject to availability.">Las Granjas Agroecológicas del Mañana están abiertas a agricultores, técnicos, investigadores, estudiantes e instituciones. Las visitas son guiadas y gratuitas, sujetas a disponibilidad.</p>
+
+          <!-- Info boxes -->
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:32px">
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start">
+              <span style="font-size:1.4rem;flex-shrink:0">📍</span>
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.15em;color:var(--g400);text-transform:uppercase;margin-bottom:4px" data-es="Ubicación" data-en="Location">Ubicación</div>
+                <div style="font-size:.85rem;color:rgba(255,255,255,.7);font-weight:300">Campus Fundación Origen · Av. Virginia Subercaseaux 2400 · Pirque, Región Metropolitana</div>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start">
+              <span style="font-size:1.4rem;flex-shrink:0">📅</span>
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.15em;color:var(--g400);text-transform:uppercase;margin-bottom:4px" data-es="Disponibilidad" data-en="Availability">Disponibilidad</div>
+                <div style="font-size:.85rem;color:rgba(255,255,255,.7);font-weight:300" data-es="Lunes a viernes · Previa coordinación · Grupos de hasta 25 personas" data-en="Monday to Friday · Prior coordination required · Groups up to 25 people">Lunes a viernes · Previa coordinación · Grupos de hasta 25 personas</div>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start">
+              <span style="font-size:1.4rem;flex-shrink:0">✉️</span>
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.15em;color:var(--g400);text-transform:uppercase;margin-bottom:4px" data-es="Confirmaremos por email" data-en="We will confirm by email">Confirmaremos por email</div>
+                <div style="font-size:.85rem;color:rgba(255,255,255,.7);font-weight:300" data-es="Una vez recibida tu solicitud nos pondremos en contacto a la brevedad para confirmar fecha y detalles." data-en="Once your request is received we will contact you shortly to confirm date and details.">Una vez recibida tu solicitud nos pondremos en contacto a la brevedad para confirmar fecha y detalles.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="sr sd2">
+          <div class="form-card">
+            <div class="form-card-title" data-es="Solicitud de visita" data-en="Visit request">Solicitud de visita</div>
+
+            <!-- Formspree form -->
+            <form id="visit-form" action="https://formspree.io/f/xaqpkvad" method="POST">
+              <div class="form-grid">
+                <div class="fg">
+                  <label data-es="Nombre completo *" data-en="Full name *">Nombre completo *</label>
+                  <input type="text" name="nombre" placeholder="Tu nombre completo" required>
+                </div>
+                <div class="fg">
+                  <label data-es="Email *" data-en="Email *">Email *</label>
+                  <input type="email" name="email" placeholder="tu@email.com" required>
+                </div>
+                <div class="fg">
+                  <label data-es="Teléfono / WhatsApp *" data-en="Phone / WhatsApp *">Teléfono / WhatsApp *</label>
+                  <input type="tel" name="telefono" placeholder="+56 9 XXXX XXXX" required>
+                </div>
+                <div class="fg">
+                  <label data-es="Institución / Organización" data-en="Institution / Organization">Institución / Organización</label>
+                  <input type="text" name="institucion" placeholder="Tu institución o empresa">
+                </div>
+                <div class="fg">
+                  <label data-es="Fecha preferida *" data-en="Preferred date *">Fecha preferida *</label>
+                  <input type="date" name="fecha_preferida" required style="cursor:pointer">
+                </div>
+                <div class="fg">
+                  <label data-es="Número de personas *" data-en="Number of people *">Número de personas *</label>
+                  <select name="numero_personas" required>
+                    <option value="" data-es="— Selecciona —" data-en="— Select —">— Selecciona —</option>
+                    <option value="1-5">1 – 5 personas</option>
+                    <option value="6-10">6 – 10 personas</option>
+                    <option value="11-20">11 – 20 personas</option>
+                    <option value="21-25">21 – 25 personas</option>
+                  </select>
+                </div>
+                <div class="fg full">
+                  <label data-es="Motivo de la visita / Interés temático *" data-en="Reason for visit / Interest *">Motivo de la visita / Interés temático *</label>
+                  <textarea name="motivo" placeholder="¿Qué los trae al proyecto? ¿Qué temas les interesa conocer?" style="min-height:96px" required></textarea>
+                </div>
+                <!-- Hidden fields for context -->
+                <input type="hidden" name="_subject" value="Nueva solicitud de visita — Granjas Agroecológicas del Mañana">
+                <input type="hidden" name="_language" value="es">
+              </div>
+
+              <!-- Disclaimer -->
+              <div style="background:var(--g100);border:1px solid rgba(184,146,74,.25);border-radius:2px;padding:14px 16px;margin-top:18px;display:flex;gap:12px;align-items:flex-start">
+                <span style="font-size:1rem;flex-shrink:0">ℹ️</span>
+                <p style="font-size:.78rem;line-height:1.65;color:var(--s600);font-weight:300" data-es="Esta solicitud está sujeta a confirmación. Una vez recibida nos pondremos en contacto contigo a la brevedad para confirmar la fecha y coordinar los detalles de la visita." data-en="This request is subject to confirmation. Once received we will contact you shortly to confirm the date and coordinate visit details.">Esta solicitud está sujeta a confirmación. Una vez recibida nos pondremos en contacto contigo a la brevedad para confirmar la fecha y coordinar los detalles de la visita.</p>
+              </div>
+
+              <button type="submit" class="form-submit" style="margin-top:20px">
+                📅 <span data-es="Enviar solicitud de visita" data-en="Send visit request">Enviar solicitud de visita</span>
+              </button>
+            </form>
+
+            <!-- Success state -->
+            <div id="visit-success" style="display:none;text-align:center;padding:52px 20px">
+              <span style="font-size:3rem;display:block;margin-bottom:18px">📅</span>
+              <div style="font-family:var(--fd);font-size:2rem;font-weight:300;color:var(--s800);margin-bottom:10px" data-es="¡Solicitud enviada!" data-en="Request sent!">¡Solicitud enviada!</div>
+              <p style="font-size:.9rem;color:var(--s500);font-weight:300;line-height:1.75" data-es="Hemos recibido tu solicitud. Nos pondremos en contacto contigo a la brevedad para confirmar la fecha y los detalles de tu visita." data-en="We have received your request. We will contact you shortly to confirm the date and details of your visit.">Hemos recibido tu solicitud. Nos pondremos en contacto contigo a la brevedad para confirmar la fecha y los detalles de tu visita.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════ LOGOS ═══════════ -->
 <div class="inst-bg section-sm">
   <div class="wrap">
@@ -1068,12 +1197,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
         </svg>
         <div class="il-name">Eco Río Claro SpA</div>
       </div>
-      <div class="il">
-        <svg width="52" height="52" viewBox="0 0 180 180" style="flex-shrink:0">
-          <text x="10" y="138" font-family="Georgia,serif" font-weight="bold" font-size="100" fill="var(--l500)">RM</text>
-        </svg>
-        <div class="il-name">Revolución Marrón</div>
-      </div>
+
     </div>
   </div>
 </div>
@@ -1099,6 +1223,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
         <ul>
           <li><a href="#registro" data-es="Registrar visita" data-en="Register visit">Registrar visita</a></li>
           <li><a href="#estadisticas" data-es="Ver estadísticas" data-en="View statistics">Ver estadísticas</a></li>
+          <li><a href="#solicitar-visita" data-es="Solicitar visita" data-en="Request visit">Solicitar visita</a></li>
         </ul>
       </div>
       <div>
@@ -1114,7 +1239,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
     </div>
     <div class="footer-bottom">
       <span>© 2025 Granjas Agroecológicas del Mañana · FIA PYT-2024-0454</span>
-      <span data-es="Ejecutado por Eco Río Claro SpA · Fundación Origen · Revolución Marrón" data-en="Executed by Eco Río Claro SpA · Fundación Origen · Revolución Marrón">Ejecutado por Eco Río Claro SpA · Fundación Origen · Revolución Marrón</span>
+      <span data-es="Ejecutado por Eco Río Claro SpA · Fundación Origen" data-en="Executed by Eco Río Claro SpA · Fundación Origen">Ejecutado por Eco Río Claro SpA · Fundación Origen</span>
     </div>
   </div>
 </footer>
@@ -1318,6 +1443,37 @@ const sro = new IntersectionObserver(entries => {
   });
 }, { threshold: .07 });
 document.querySelectorAll('.sr').forEach(el => sro.observe(el));
+
+/* ─── Visit form Formspree ─── */
+const visitForm = document.getElementById('visit-form');
+if (visitForm) {
+  visitForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = visitForm.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ <span>Enviando...</span>';
+    btn.disabled = true;
+    try {
+      const response = await fetch(visitForm.action, {
+        method: 'POST',
+        body: new FormData(visitForm),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        visitForm.style.display = 'none';
+        document.getElementById('visit-success').style.display = 'block';
+      } else {
+        btn.innerHTML = '⚠️ <span>Error — intenta de nuevo</span>';
+        btn.disabled = false;
+        setTimeout(() => { btn.innerHTML = originalText; }, 3000);
+      }
+    } catch {
+      btn.innerHTML = '⚠️ <span>Error de conexión</span>';
+      btn.disabled = false;
+      setTimeout(() => { btn.innerHTML = originalText; }, 3000);
+    }
+  });
+}
 
 /* ─── Responsive table ─── */
 function chkTables() {
