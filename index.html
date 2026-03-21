@@ -1249,9 +1249,12 @@ footer a:hover{color:rgba(255,255,255,.82)}
 </footer>
 
 <script>
-/* ─── State ─── */
-const SK = 'gao_v4';
+/* ─── Config ─── */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydKKumu4GERkyhoSgAp5XnuvrFi_pl4u1UAfFcMxy_xEOW23VwpRQPgmO_bWf6bZiUdA/exec';
+const SHEET_ID   = '1rkjNaEAOIZ6HM03Yuw9_-IhcCLXwZb_WipNqDqPEo04';
+const SK = 'gao_v4'; // keep local cache for offline resilience
 let visitors = [], lang = 'es';
+
 function load() { try { visitors = JSON.parse(localStorage.getItem(SK) || '[]'); } catch { visitors = []; } }
 function save() { localStorage.setItem(SK, JSON.stringify(visitors)); }
 
@@ -1313,28 +1316,82 @@ function scrollToForm() {
 document.getElementById('fco').addEventListener('change', function () {
   document.getElementById('rg-grp').style.display = this.value === 'Chile' ? 'flex' : 'none';
 });
-function submitForm() {
-  const name = document.getElementById('fn').value.trim();
+
+async function submitForm() {
+  const name  = document.getElementById('fn').value.trim();
   const email = document.getElementById('fe').value.trim();
   if (!name || !email) { toast(lang === 'es' ? '⚠ Nombre y email obligatorios' : '⚠ Name and email required'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast(lang === 'es' ? '⚠ Email inválido' : '⚠ Invalid email'); return; }
-  visitors.push({
-    id: Date.now(), date: new Date().toISOString(),
-    name, email,
-    phone: document.getElementById('fp').value.trim(),
-    org: document.getElementById('fo').value.trim(),
-    country: document.getElementById('fco').value || 'No especificado',
-    region: document.getElementById('frg').value,
-    profile: document.getElementById('fpr').value,
-    interest: document.getElementById('fi').value.trim(),
-    source: document.getElementById('fs').value,
-  });
+
+  const entry = {
+    nombre:      name,
+    email:       email,
+    telefono:    document.getElementById('fp').value.trim(),
+    institucion: document.getElementById('fo').value.trim(),
+    pais:        document.getElementById('fco').value || 'No especificado',
+    region:      document.getElementById('frg').value,
+    perfil:      document.getElementById('fpr').value,
+    interes:     document.getElementById('fi').value.trim(),
+    fuente:      document.getElementById('fs').value,
+  };
+
+  // Save locally first (works offline)
+  const localEntry = { ...entry, id: Date.now(), date: new Date().toISOString(),
+    country: entry.pais, profile: entry.perfil, org: entry.institucion };
+  visitors.push(localEntry);
   save();
   updateDash();
+
+  // Send to Google Sheets
+  const btn = document.querySelector('.form-submit');
+  btn.disabled = true;
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry)
+    });
+  } catch(err) {
+    console.warn('Sheet sync failed:', err);
+  } finally {
+    btn.disabled = false;
+  }
+
   document.getElementById('vform').style.display = 'none';
   document.getElementById('fsuccess').style.display = 'block';
   toast(lang === 'es' ? '🌱 ¡Registro completado!' : '🌱 Registration complete!');
   setTimeout(() => document.getElementById('estadisticas').scrollIntoView({ behavior: 'smooth' }), 2000);
+}
+
+/* ─── Fetch stats from Sheet for dashboard ─── */
+async function fetchSheetStats() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
+    const res  = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google.visualization.Query.setResponse\((.*)\)/s)[1]);
+    const rows = json.table.rows;
+    if (!rows || rows.length === 0) return null;
+
+    // Build visitor array from sheet
+    const sheetVisitors = rows.map(r => ({
+      date:     r.c[0]?.v || '',
+      nombre:   r.c[1]?.v || '',
+      email:    r.c[2]?.v || '',
+      telefono: r.c[3]?.v || '',
+      org:      r.c[4]?.v || '',
+      country:  r.c[5]?.v || '',
+      region:   r.c[6]?.v || '',
+      profile:  r.c[7]?.v || '',
+      interes:  r.c[8]?.v || '',
+      fuente:   r.c[9]?.v || '',
+    }));
+    return sheetVisitors;
+  } catch(e) {
+    console.warn('Could not fetch sheet stats:', e);
+    return null;
+  }
 }
 
 /* ─── Dashboard ─── */
@@ -1347,34 +1404,40 @@ function animN(id, target) {
   const tick = now => { const p = Math.min((now - t0) / dur, 1); el.textContent = Math.round(p * target); if (p < 1) requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
 }
-function updateDash() {
-  const total = visitors.length;
-  const cos = Object.keys(countBy(visitors, 'country')).filter(c => c && c !== 'No especificado' && c !== '—').length;
-  const rgs = Object.keys(countBy(visitors.filter(v => v.country === 'Chile'), 'region')).filter(Boolean).length;
-  const ins = Object.keys(countBy(visitors, 'org')).filter(o => o && o !== 'No especificado' && o !== '—' && o.length > 1).length;
 
-  // Stats band
+function renderDash(data) {
+  const total = data.length;
+  const cos   = Object.keys(countBy(data, 'country')).filter(c => c && c !== 'No especificado' && c !== '—').length;
+  const rgs   = Object.keys(countBy(data.filter(v => v.country === 'Chile'), 'region')).filter(Boolean).length;
+  const ins   = Object.keys(countBy(data, 'org')).filter(o => o && o !== 'No especificado' && o !== '—' && o.length > 1).length;
+
   animN('st-v', total); animN('st-c', cos); animN('st-r', rgs); animN('st-i', ins);
-
-  // KPIs
   document.getElementById('kv-v').textContent = total || '—';
-  document.getElementById('kv-c').textContent = cos || '—';
-  document.getElementById('kv-r').textContent = rgs || '—';
-  document.getElementById('kv-i').textContent = ins || '—';
+  document.getElementById('kv-c').textContent = cos   || '—';
+  document.getElementById('kv-r').textContent = rgs   || '—';
+  document.getElementById('kv-i').textContent = ins   || '—';
 
   setTimeout(() => {
-    document.getElementById('kf-v').style.width = Math.min(100, (total / 50) * 100) + '%';
-    document.getElementById('kf-c').style.width = Math.min(100, (cos / 20) * 100) + '%';
-    document.getElementById('kf-r').style.width = Math.min(100, (rgs / 16) * 100) + '%';
-    document.getElementById('kf-i').style.width = Math.min(100, (ins / 30) * 100) + '%';
+    document.getElementById('kf-v').style.width = Math.min(100, (total / 50)  * 100) + '%';
+    document.getElementById('kf-c').style.width = Math.min(100, (cos   / 20)  * 100) + '%';
+    document.getElementById('kf-r').style.width = Math.min(100, (rgs   / 16)  * 100) + '%';
+    document.getElementById('kf-i').style.width = Math.min(100, (ins   / 30)  * 100) + '%';
   }, 350);
 
-  renderTable('tco', countBy(visitors, 'country'));
-  renderTable('tpr', countBy(visitors, 'profile'));
-  renderMaps();
+  renderTable('tco', countBy(data, 'country'));
+  renderTable('tpr', countBy(data, 'profile'));
+  renderMaps(data);
 }
+
+async function updateDash() {
+  // Try sheet first, fallback to local
+  const sheetData = await fetchSheetStats();
+  const data = sheetData && sheetData.length > 0 ? sheetData : visitors;
+  renderDash(data);
+}
+
 function renderTable(id, counts) {
-  const tb = document.getElementById(id);
+  const tb   = document.getElementById(id);
   const rows = Object.entries(counts).filter(([k]) => k && k !== '—').sort((a, b) => b[1] - a[1]).slice(0, 8);
   if (!rows.length) {
     tb.innerHTML = `<tr class="empty-row"><td colspan="3" style="padding:16px 12px;font-style:italic">${lang === 'es' ? 'Sin registros aún' : 'No records yet'}</td></tr>`;
@@ -1402,15 +1465,16 @@ const RC = {
   'Maule':[133,418],'Ñuble':[132,448],'Biobío':[131,458],'La Araucanía':[130,498],
   'Los Ríos':[129,520],'Los Lagos':[128,538],'Aysén':[127,590],'Magallanes':[125,632],
 };
-function renderMaps() {
+
+function renderMaps(data) {
   const wg = document.getElementById('wdots');
-  const wc = countBy(visitors, 'country');
+  const wc = countBy(data, 'country');
   wg.innerHTML = Object.entries(wc).filter(([k]) => CC[k] && k !== 'Chile').map(([k, v]) => {
     const [x, y] = CC[k], r = Math.min(4 + Math.sqrt(v) * 2.5, 16);
     return `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(212,171,98,.72)" class="mdot" data-tip="${k}: ${v}" style="cursor:pointer"/>`;
   }).join('');
   const cg = document.getElementById('cdots');
-  const rc = countBy(visitors.filter(v => v.country === 'Chile'), 'region');
+  const rc = countBy(data.filter(v => v.country === 'Chile'), 'region');
   cg.innerHTML = Object.entries(rc).filter(([k]) => RC[k]).map(([k, v]) => {
     const [x, y] = RC[k], r = Math.min(3 + Math.sqrt(v) * 2, 12);
     return `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(212,171,98,.78)" class="mdot" data-tip="${k}: ${v}" style="cursor:pointer"/>`;
@@ -1419,34 +1483,24 @@ function renderMaps() {
     d.addEventListener('mouseenter', e => {
       const isW = !!e.target.closest('#mp-world');
       const tip = document.getElementById(isW ? 'tip-w' : 'tip-c');
-      const wr = e.target.closest('.svg-wrap').getBoundingClientRect();
+      const wr  = e.target.closest('.svg-wrap').getBoundingClientRect();
       tip.textContent = e.target.getAttribute('data-tip');
       tip.style.opacity = '1';
       tip.style.left = (e.clientX - wr.left + 12) + 'px';
-      tip.style.top = (e.clientY - wr.top - 36) + 'px';
+      tip.style.top  = (e.clientY - wr.top  - 36) + 'px';
     });
     d.addEventListener('mouseleave', e => {
       document.getElementById(e.target.closest('#mp-world') ? 'tip-w' : 'tip-c').style.opacity = '0';
     });
   });
 }
+
 function switchMap(w, btn) {
   document.querySelectorAll('.mt').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.map-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('mp-' + w).classList.add('active');
 }
-
-/* ─── Scroll reveal ─── */
-const sro = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      if (e.target.closest('#estadisticas')) updateDash();
-    }
-  });
-}, { threshold: .07 });
-document.querySelectorAll('.sr').forEach(el => sro.observe(el));
 
 /* ─── Visit form Formspree ─── */
 const visitForm = document.getElementById('visit-form');
@@ -1485,6 +1539,17 @@ function chkTables() {
   if (el) el.style.gridTemplateColumns = innerWidth < 640 ? '1fr' : '1fr 1fr';
 }
 window.addEventListener('resize', chkTables);
+
+/* ─── Scroll reveal ─── */
+const sro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (e.target.closest('#estadisticas')) updateDash();
+    }
+  });
+}, { threshold: .07 });
+document.querySelectorAll('.sr').forEach(el => sro.observe(el));
 
 /* ─── Init ─── */
 window.addEventListener('DOMContentLoaded', () => {
