@@ -12,6 +12,9 @@
 <meta name="robots" content="index, follow">
 <meta name="google-site-verification" content="JC1MlUslXBoT1ZjadKJML3YCx4dv-691Ow1ZWgZr45c">
 <link rel="canonical" href="https://granjaorigen.cl/">
+<link rel="alternate" hreflang="es" href="https://granjaorigen.cl/">
+<link rel="alternate" hreflang="en" href="https://granjaorigen.cl/">
+<link rel="alternate" hreflang="x-default" href="https://granjaorigen.cl/">
 
 <!-- ── Open Graph (Facebook, WhatsApp, LinkedIn) ── -->
 <meta property="og:type" content="website">
@@ -91,6 +94,51 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-41KVL6S9RG');
+</script>
+
+<!-- Breadcrumb Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "https://granjaorigen.cl/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Registro de visitantes",
+      "item": "https://granjaorigen.cl/#registro"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Solicitar visita",
+      "item": "https://granjaorigen.cl/#solicitar-visita"
+    }
+  ]
+}
+</script>
+
+<!-- WebSite Schema for Sitelinks Searchbox -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Granjas Agroecológicas del Mañana",
+  "url": "https://granjaorigen.cl/",
+  "inLanguage": ["es", "en"],
+  "description": "Modelo demostrativo regenerativo en Pirque, Región Metropolitana de Chile. Proyecto FIA PYT-2024-0454.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Fundación Origen",
+    "url": "https://fundacionorigen.cl"
+  }
+}
 </script>
 
 <!-- Performance hints -->
@@ -293,7 +341,7 @@ button{font-family:inherit;cursor:pointer}
 }
 .sb-l{
   font-family:var(--fm);font-size:.6rem;letter-spacing:.14em;
-  text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:8px;
+  text-transform:uppercase;color:rgba(255,255,255,.65);margin-top:8px;
 }
 
 /* ═══════════════════════════════════════════
@@ -528,7 +576,7 @@ h2.display.light em{color:var(--g300)}
 .kpi:hover{background:rgba(255,255,255,.04)}
 .kpi-label{
   font-family:var(--fm);font-size:.58rem;letter-spacing:.16em;
-  color:rgba(255,255,255,.28);text-transform:uppercase;margin-bottom:14px;
+  color:rgba(255,255,255,.55);text-transform:uppercase;margin-bottom:14px;
 }
 .kpi-val{
   font-family:var(--fd);font-size:2.4rem;font-weight:600;
@@ -536,7 +584,7 @@ h2.display.light em{color:var(--g300)}
 }
 .kpi-sub{font-size:.75rem;color:rgba(255,255,255,.25);margin-top:6px;font-weight:300}
 .kpi-bar{margin-top:18px;height:2px;background:rgba(255,255,255,.07)}
-.kpi-fill{height:100%;background:var(--g400);transition:width 1.6s var(--ease)}
+.kpi-fill{height:100%;background:var(--g400);transition:transform 1.6s var(--ease);transform:scaleX(0);transform-origin:left}
 
 /* Tables */
 .dash-tables{
@@ -560,7 +608,7 @@ h2.display.light em{color:var(--g300)}
 }
 .otbl td:first-child{color:rgba(255,255,255,.82);font-weight:400}
 .obar{height:3px;background:rgba(255,255,255,.05);border-radius:2px}
-.obar-fill{height:100%;background:linear-gradient(90deg,var(--l400),var(--l300));border-radius:2px}
+.obar-fill{height:100%;background:linear-gradient(90deg,var(--l400),var(--l300));border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease)}
 .empty-row td{color:rgba(255,255,255,.2)!important;font-style:italic;font-size:.8rem}
 
 /* Maps */
@@ -595,7 +643,7 @@ h2.display.light em{color:var(--g300)}
 }
 .map-note{
   font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;
-  color:rgba(255,255,255,.18);margin-top:10px;text-transform:uppercase;
+  color:rgba(255,255,255,.45);margin-top:10px;text-transform:uppercase;
 }
 
 /* ═══════════════════════════════════════════
@@ -608,7 +656,7 @@ h2.display.light em{color:var(--g300)}
 }
 .inst-label{
   font-family:var(--fm);font-size:.6rem;letter-spacing:.2em;
-  color:var(--s300);text-transform:uppercase;
+  color:var(--s500);text-transform:uppercase;
   text-align:center;margin-bottom:44px;
 }
 .inst-logos{
@@ -645,7 +693,7 @@ footer{
 .ft-brand p{font-size:.8rem;line-height:1.8;max-width:280px;font-weight:300}
 .ft-code{
   font-family:var(--fm);font-size:.58rem;letter-spacing:.14em;
-  color:rgba(255,255,255,.18);margin-top:18px;
+  color:rgba(255,255,255,.45);margin-top:18px;
 }
 footer h4{
   font-family:var(--fm);font-size:.6rem;letter-spacing:.16em;
@@ -657,7 +705,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
 .footer-bottom{
   display:flex;justify-content:space-between;align-items:center;
   font-family:var(--fm);font-size:.6rem;letter-spacing:.09em;
-  color:rgba(255,255,255,.18);flex-wrap:wrap;gap:8px;
+  color:rgba(255,255,255,.45);flex-wrap:wrap;gap:8px;
 }
 
 /* ═══════════════════════════════════════════
@@ -727,6 +775,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
 </head>
 <body>
 
+<a href="#main-content" style="position:absolute;top:-40px;left:0;background:var(--g400);color:var(--s900);padding:8px 16px;z-index:9999;font-family:var(--fm);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border-radius:0 0 4px 0;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'" data-es="Ir al contenido principal" data-en="Skip to main content">Ir al contenido principal</a>
 <div class="toast" id="toast"></div>
 
 <!-- ═══════════ NAV ═══════════ -->
@@ -776,6 +825,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
   <div class="hero-scroll"><div class="scroll-line"></div></div>
 </section>
 
+<main id="main-content">
 <!-- ═══════════ STATS BAND ═══════════ -->
 <div class="stats-band">
   <div class="sb"><span class="sb-n" id="st-v">0</span><div class="sb-l" data-es="Visitantes registrados" data-en="Registered visitors">Visitantes registrados</div></div>
@@ -1255,7 +1305,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
                 </div>
                 <div class="fg">
                   <label data-es="Fecha preferida *" data-en="Preferred date *">Fecha preferida *</label>
-                  <input type="date" name="fecha_preferida" required style="cursor:pointer">
+                  <input type="date" name="fecha_preferida" id="fecha_preferida" required style="cursor:pointer" aria-label="Fecha preferida de visita">
                 </div>
                 <div class="fg">
                   <label data-es="Número de personas *" data-en="Number of people *">Número de personas *</label>
@@ -1331,6 +1381,7 @@ footer a:hover{color:rgba(255,255,255,.82)}
   </div>
 </div>
 
+</main>
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer>
   <div class="wrap">
@@ -1542,10 +1593,10 @@ function renderDash(data) {
   document.getElementById('kv-i').textContent = ins   || '—';
 
   setTimeout(() => {
-    document.getElementById('kf-v').style.width = Math.min(100, (total / 50)  * 100) + '%';
-    document.getElementById('kf-c').style.width = Math.min(100, (cos   / 20)  * 100) + '%';
-    document.getElementById('kf-r').style.width = Math.min(100, (rgs   / 16)  * 100) + '%';
-    document.getElementById('kf-i').style.width = Math.min(100, (ins   / 30)  * 100) + '%';
+    document.getElementById('kf-v').style.transform = 'scaleX(' + Math.min(1, total / 50) + ')';
+    document.getElementById('kf-c').style.transform = 'scaleX(' + Math.min(1, cos   / 20) + ')';
+    document.getElementById('kf-r').style.transform = 'scaleX(' + Math.min(1, rgs   / 16) + ')';
+    document.getElementById('kf-i').style.transform = 'scaleX(' + Math.min(1, ins   / 30) + ')';
   }, 350);
 
   renderTable('tco', countBy(data, 'country'));
