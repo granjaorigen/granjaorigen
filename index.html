@@ -665,14 +665,16 @@ h2.display.light em{color:var(--g300)}
 }
 .il{
   display:flex;flex-direction:column;align-items:center;gap:10px;
-  opacity:.6;transition:opacity .3s;
+  transition:opacity .3s;
 }
-.il:hover{opacity:1}
-.il img{height:60px;width:auto;object-fit:contain}
+.il img{height:60px;width:auto;object-fit:contain;opacity:.55;transition:opacity .3s}
+.il:hover img{opacity:1}
 .il-name{
   font-family:var(--fm);font-size:.58rem;letter-spacing:.14em;
-  color:var(--s800);text-transform:uppercase;text-align:center;
+  color:var(--s700);text-transform:uppercase;text-align:center;
+  opacity:.7;transition:opacity .3s;
 }
+.il:hover .il-name{opacity:1}
 
 /* ═══════════════════════════════════════════
    FOOTER
